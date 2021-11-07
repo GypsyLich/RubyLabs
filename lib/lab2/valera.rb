@@ -1,10 +1,10 @@
 class Valera
-	attr_reader :health, :alcomana, :happy, :tired
+	attr_reader :health, :alcohol, :happy, :tired
 	attr_accessor :money
 
-	def initialize(health = 100, alcomana = 0, happy = 0, tired  = 0, money = 300)
+	def initialize(health = 100, alcohol = 0, happy = 0, tired  = 0, money = 300)
 		@health = health
-		@alcomana = alcomana
+		@alcohol = alcohol
 		@happy = happy
 		@tired  = tired
 		@money = money
@@ -18,9 +18,11 @@ class Valera
 		@health = validate(health, 0, 100)
 	end
 
-	def alcomana=(alcomana)
-		@health -= validate(@alcomana - alcomana, 0, @health)
-		@alcomana = validate(alcomana, 0, 100)
+	def alcohol=(alcohol)
+    if @alcohol < alcohol
+      @health -= validate(@alcohol - alcohol, 0, @health)
+    end
+		@alcohol = validate(alcohol, 0, 100)
 	end
 
 	def happy=(happy)
