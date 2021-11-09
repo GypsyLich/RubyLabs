@@ -19,7 +19,7 @@ class Valera
 	end
 
 	def alcohol=(alcohol)
-    if @alcohol < alcohol
+    if @alcohol < alcohol.abs
       @health -= validate(@alcohol - alcohol, 0, @health)
     end
 		@alcohol = validate(alcohol, 0, 100)

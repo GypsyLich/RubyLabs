@@ -44,6 +44,31 @@ class Game
     @valera.send("#{name}=", @valera.send(name) + value)
   end
 
+  def change_attr_v2(action)
+    action['result'].each do |effect|
+      change_attr(effect['name'], effect['value'])
+      if effect.include?('condition')
+        if @valera.send(effect['condition']['name']).between?(effect['condition']['min'], effect['condition']['max'])
+          change_attr(effect['name'], effect['condition']['value'])
+        end
+      end
+    end
+  end
+
+  def do_action_json(action)
+    if action['conditions'].size != 0
+      action['conditions'].each do |condition|
+        unless @valera.send(condition['name']).between?(condition['min'], condition['max'])
+          puts "\nПараметр Валеры #{condition['name']} должен быть в промежутке от #{condition['min']} до #{condition['max']}\n"
+          return RUNNING
+        end
+      end
+      change_attr_v2(action)
+    else
+      change_attr_v2(action)
+    end
+  end
+
   def app
     config = @fileManager.load_config
     state = MENU
@@ -87,9 +112,9 @@ class Game
     if input < 0 || input > config['actions'].length - 1
       return RUNNING
     end
-    config['actions'][input]['result'].each do |effect|
-      change_attr(effect['name'], effect['value'])
-    end
+
+    do_action_json(config['actions'][input])
+
     if @valera.dead?
       puts "Потрачено"
       return EXIT
