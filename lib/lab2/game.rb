@@ -1,15 +1,5 @@
-require_relative './file_manager.rb'
-require_relative './view.rb'
-require 'json'
-require 'io/console'
-
-module GameStates
-  MENU = 0
-
-  RUNNING = 1
-
-  EXIT = 2
-end
+require_relative './game_states'
+require_relative './actions'
 
 class Game
   include GameStates

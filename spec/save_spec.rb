@@ -7,8 +7,8 @@ RSpec.describe FileManager do
     let(:file_manager) { FileManager.new }
     it 'Save and load file' do
       file_manager.save(valera_expected)
-      loadedGame = file_manager.load_game
-      valera_loaded = Valera.new(loadedGame['health'], loadedGame['alcohol'], loadedGame['happy'], loadedGame['tired'], loadedGame['money'])
+      saved_game = file_manager.load_game
+      valera_loaded = Valera.new(saved_game)
       expect(valera_loaded) == valera_expected
     end
   end
