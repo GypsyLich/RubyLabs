@@ -19,4 +19,3 @@ RSpec.describe FileManager do
     end
   end
 end
-

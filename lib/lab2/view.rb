@@ -7,11 +7,12 @@ class View
     @clear_screen_symbol = clear_screen_symbol
   end
 
-  def ui(valera)
-    puts "\e[H\e[2J"
+  def ui(valera, error)
+    puts @clear_screen_symbol
     print_stats(valera)
     print_actions
     print_configs
+    print_error(error) if error
   end
 
   def print_stats(valera)
@@ -22,7 +23,7 @@ class View
   end
 
   def start_menu
-    puts "\e[H\e[2J"
+    puts @clear_screen_symbol
     puts "|--------| Приключения Маргинала Валеры |--------|\n\n\n"
     puts '1 - Новая игра'
     puts '2 - Загрузить игру'
@@ -30,7 +31,7 @@ class View
   end
 
   def print_actions
-    config = @fileManager.load_config
+    config = @file_manager.load_config
     counter = 1
     config['actions'].each do |action|
       puts "#{counter} - #{action['name']}"
@@ -49,5 +50,13 @@ class View
   def print_saved
     puts "\n****Игра сохранена****"
     puts 'Нажмите любую клавишу чтобы продолжить'
+  end
+
+  def print_error(error)
+    puts error
+  end
+
+  def game_over
+    puts 'Потрачено'
   end
 end

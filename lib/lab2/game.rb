@@ -4,111 +4,74 @@ require_relative './actions'
 class Game
   include GameStates
 
-  def initialize
-    @view = View.new
-    @valera = Valera.new
-    @fileManager = FileManager.new
+  def initialize(view, file_manager, input)
+    @view = view
+    @file_manager = file_manager
+    @input = input
   end
 
   def start_menu
     @view.start_menu
-    input = STDIN.getch.to_i
+    input = @input.get_key.to_i
     case input
     when 1
-      return { "player" => Valera.new, "start" => true }
+      [RUNNING, Valera.new]
     when 2
-      loadedGame = @fileManager.load_game
-      return { "player" => Valera.new(loadedGame['health'], loadedGame['alcohol'], loadedGame['happy'], loadedGame['tired'], loadedGame['money']), "start" => true }
+      saved_game = @file_manager.load_game
+      [RUNNING, Valera.new(saved_game)]
     when 3
-      return { "start" => false }
+      EXIT
     else
-      puts "fdssdfsd"
+      MENU
     end
   end
 
   def start
-    app
+    game
   end
 
-  def change_attr(name, value)
-    @valera.send("#{name}=", @valera.send(name) + value)
-  end
-
-  def change_attr_v2(action)
-    action['result'].each do |effect|
-      change_attr(effect['name'], effect['value'])
-      if effect.include?('condition')
-        if @valera.send(effect['condition']['name']).between?(effect['condition']['min'], effect['condition']['max'])
-          change_attr(effect['name'], effect['condition']['value'])
-        end
-      end
-    end
-  end
-
-  def do_action_json(action)
-    if action['conditions'].size != 0
-      action['conditions'].each do |condition|
-        unless @valera.send(condition['name']).between?(condition['min'], condition['max'])
-          puts "\nПараметр Валеры #{condition['name']} должен быть в промежутке от #{condition['min']} до #{condition['max']}\n"
-          return RUNNING
-        end
-      end
-      change_attr_v2(action)
-    else
-      change_attr_v2(action)
-    end
-  end
-
-  def app
-    config = @fileManager.load_config
+  def game
+    config = @file_manager.load_config
     state = MENU
-    @valera = Valera.new
+    valera = Valera.new
+    error = nil
 
     loop do
       case state
       when MENU
-        game = start_menu
-        if game["start"]
-          state = RUNNING
-          @valera = game["player"]
-        end
+        state, valera = start_menu
       when RUNNING
-        state = game_step(config)
+        state, valera, error = game_step(config, valera, error)
       when EXIT
-        return
-      else
         return
       end
     end
   end
 
-  def game_step(config)
-    @view.ui(@valera)
-    input = STDIN.getch
-    #TODO: меню
+  def game_step(config, valera, error)
+    @view.ui(valera, error)
+    input = @input.get_key
     case input
     when 'q'
       @view.print_exit
-      return EXIT
+      return EXIT, valera
     when 'm'
-      @fileManager.save(@valera)
-      return MENU
+      @file_manager.save(valera)
+      return MENU, valera
     when 's'
-      @fileManager.save(@valera)
+      @file_manager.save(valera)
       @view.print_saved
-      STDIN.getch
+      @input.get_key
     end
     input = input.to_i - 1
-    if input < 0 || input > config['actions'].length - 1
-      return RUNNING
-    end
+    return RUNNING, valera if input.negative? || input > config['actions'].length - 1
 
-    do_action_json(config['actions'][input])
+    error = Actions.new.do_action(config['actions'][input], valera)
 
-    if @valera.dead?
-      puts "Потрачено"
-      return EXIT
+    if valera.dead?
+      @view.game_over
+      return EXIT, valera
     end
-    return RUNNING
+    [RUNNING, valera, error]
   end
 end
