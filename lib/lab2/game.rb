@@ -12,7 +12,7 @@ class Game
 
   def start_menu
     @view.start_menu
-    input = @input.get_key.to_i
+    input = @input.key.to_i
     case input
     when 1
       [RUNNING, Valera.new]
@@ -50,7 +50,7 @@ class Game
 
   def game_step(config, valera, error)
     @view.ui(valera, error)
-    input = @input.get_key
+    input = @input.key
     case input
     when 'q'
       @view.print_exit
@@ -61,7 +61,7 @@ class Game
     when 's'
       @file_manager.save(valera)
       @view.print_saved
-      @input.get_key
+      @input.key
     end
     input = input.to_i - 1
     return RUNNING, valera if input.negative? || input > config['actions'].length - 1

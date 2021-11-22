@@ -3,7 +3,7 @@ class InputMock
     @return_value = return_value
   end
 
-  def get_key
+  def key
     @return_value
   end
 end

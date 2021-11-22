@@ -1,5 +1,5 @@
 class Input
-  def get_key
+  def key
     $stdin.getch
   end
 end

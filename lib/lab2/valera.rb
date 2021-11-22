@@ -32,7 +32,9 @@ class Valera
     @tired = validate(tired, 0, 100)
   end
 
-  private def validate(value, min, max)
+  private
+
+  def validate(value, min, max)
     [[value, max].min, min].max
   end
 end

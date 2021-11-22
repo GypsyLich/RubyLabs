@@ -21,8 +21,7 @@ class Actions
   end
 
   def do_action(action, valera)
-    if action['conditions'].size.zero?
-    else
+    unless action['conditions'].size.zero?
       action['conditions'].each do |condition|
         unless valera.send(condition['name']).between?(condition['min'], condition['max'])
           return "\nПараметр Валеры #{condition['name']} должен быть в промежутке от #{condition['min']} до #{condition['max']}\n"
