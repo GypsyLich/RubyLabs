@@ -21,3 +21,6 @@ Metrics/AbcSize:
 
 Style/EndOfLine:
   EnforcedStyle: lf
+
+Layout/EndOfLine:
+  Enabled: False
