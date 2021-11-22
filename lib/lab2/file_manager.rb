@@ -19,12 +19,12 @@ class FileManager
   end
 
   def load_game
-    file_new = open File.dirname(__FILE__) + @save_file_location
+    file_new = File.open(File.dirname(__FILE__) + @save_file_location)
     JSON.parse(file_new.read)
   end
 
   def load_config
-    file = open File.dirname(__FILE__) + @config_file_location
+    file = File.open(File.dirname(__FILE__) + @config_file_location)
     JSON.parse(file.read)
   end
 end

@@ -1,7 +1,7 @@
 {
-  "health": 100,
+  "health": 80,
   "alcohol": 0,
-  "happy": 0,
-  "tired": 0,
+  "happy": 2,
+  "tired": 20,
   "money": 300
 }
