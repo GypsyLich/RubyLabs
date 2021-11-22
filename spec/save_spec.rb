@@ -1,5 +1,6 @@
 require_relative './spec_helper'
 require_relative '../lib/lab2/file_manager'
+require_relative '../lib/lab2/valera'
 
 RSpec.describe FileManager do
   describe 'Save and load file' do
