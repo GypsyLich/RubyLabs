@@ -95,5 +95,23 @@ describe Valera do
         expect(valera.dead?).to be true
       end
     end
+    context 'Valera is not dead' do
+      it 'HP = 10' do
+        valera.health = 10
+        expect(valera.dead?).to be false
+      end
+      it 'happy = -5' do
+        valera.happy = -5
+        expect(valera.dead?).to be false
+      end
+      it 'money = 100' do
+        valera.money = 100
+        expect(valera.dead?).to be false
+      end
+      it 'tired = 90' do
+        valera.tired = 90
+        expect(valera.dead?).to be false
+      end
+    end
   end
 end
